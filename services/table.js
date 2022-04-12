@@ -8,8 +8,10 @@ async function getMultiple(page = 1){
     `SELECT name, gender, age, phone
     FROM user LIMIT ${offset},${config.listPerPage}`
   );
+  const count = await db.query(`SELECT count(name) as count FROM user`)
+  const total = count[0].count
   const data = helper.emptyOrRows(rows);
-  const meta = {page};
+  const meta = {page, total, more: page * config.listPerPage < total};
 
   return {
     data,
